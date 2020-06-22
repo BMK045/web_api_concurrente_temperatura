@@ -50,6 +50,44 @@ async def obtenerTemperatura(request):
 		if Tipo == "Rango":
 			FI = request.json['FI']
 			FF = request.json['FF']
+			#return json({"R":400, "mensaje": FF})
+			#return json({"R":400, "mensaje": FI})
+			
+			#FI=datetime(FI)
+			#FF=datetime(FF)
+			try:
+				#FI = datetime.datetime.strptime(FI,"%Y-%m-%dT%H:%M:%S")
+				FI = datetime.datetime.strptime(FI,"%Y-%m-%dT%H:%M:%S")
+				FI = FI.isoformat()
+				#return json({"R":400,"mensaje": FI})
+			except Exception as errorCli:
+				print(errorCli)
+				return json({"R":400, "mensaje": "Error de cliente, Asegurese de usar el formato ISO 8601 YYYY-mm-ddTHH:MM:SS"})
+			try:
+				#FF = datetime.datetime.strptime(FF,"%Y-%m-%dT%H:%M:%S")
+				FF = datetime.datetime.strptime(FF,"%Y-%m-%dT%H:%M:%S")
+				FF = FF.isoformat()
+				#return json({"R":400,"mensaje": FF})
+			except Exception as errorCli:
+				print(errorCli)
+				return json({"R":400, "mensaje": "Error de cliente, Asegurese de usar el formato ISO 8601 YYYY-mm-ddTHH:MM:SS"})
+			"""
+			#if not type(FI) is isoformat:
+				#raise TypeError("Not isoformat")
+			#if not type(FF) is isoformat:
+				#raise TypeError("Not isoformat")
+			
+			try:
+				FI=FI.isoformat()
+			except Exception as errorCli:
+				print(errorCli)
+				return json({"R":400, "mensaje": "Error Cliente"})
+			try:
+				FF=FF.isoformat()
+			except Exception as errorCli:
+				print(errorCli)
+				return json({"R":400, "mensaje": "Error Cliente"})
+			"""
 			#start = datetime.datetime.strptime(FI, '%Y-%m-%d %H:%M:%S')
 			#print(start)
 			#end = datetime.datetime.strptime(FF, '%Y-%m-%d %H:%M:%S')
@@ -62,6 +100,7 @@ async def obtenerTemperatura(request):
 			data = await conexion.find({'fecha':{ "$gt": FI, "$lt": FF}}).to_list(20)
 			print(data)
 			#data = await conexion.find({ FI: { '$gt': datetime.datetime.fromisoformat(FI)}, FF: { '$lt': datetime.datetime.fromisoformat(FF)}}).to_list(20)
+			#ESTO DE ABAJO SI SERVÏA PERO CUANDO PARSEO A FECHA FORMATO ISO EMPIEZA A ENVIARLA VACIA
 			lista = []
 			for x in data:
 				print(x)
@@ -85,7 +124,7 @@ async def obtenerTemperatura(request):
 
 	except Exception as errorCli:
 		print(errorCli)
-		return json({"R":400, "mensaje": "Error Servidor"})
+		return json({"R":400, "mensaje": "Error Cliente"})
 
 
 loop = asyncio.get_event_loop()
